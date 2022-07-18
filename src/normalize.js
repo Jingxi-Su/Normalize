@@ -23,7 +23,7 @@ const SchemaNormalize = (schema, data, flatten, addEntity) => {
     return currentSchema.getId(data)
 }
 
-// 针对schema不是一个EntitySchema实体的情况
+// 针对schema是一个非EntitySchema实体的情况
 const noSchemaNormalize = (schema, data, flatten, addEntity) => {
     // schema可能是对象或者数组
     const arr = []
@@ -63,7 +63,7 @@ const addEntities = (entities) => {
 }
 
 const normalize = (data, schema) => {
-    const entities = {}//初始化
+    const entities = {}
     const addEntity = addEntities(entities)
     const result = flatten(data, schema, addEntity)
     return { entities, result }

@@ -33,10 +33,3 @@ const article = new schema.Entity('articles', {
         result: [comment]
     }
 });
-
-// const normalizedData = normalize(originalData, article)
-// console.log(normalizedData)
-// //还原范式化数据
-// const { result, entities } = normalizedData;
-// const denormalizedData = denormalize(result, article, entities);
-// console.log(denormalizedData)
