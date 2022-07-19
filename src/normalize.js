@@ -74,6 +74,8 @@ const schema = {
   Entity: EntitySchema
 }
 
+export { schema, normalize }
+
 const originalData = {
   id: '123',
   author: {

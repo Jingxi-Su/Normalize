@@ -73,6 +73,8 @@ const schema = {
 
 const denormalize = (result, schema, entities) => getUnflatten(entities)(result, schema)
 
+export { schema, denormalize }
+
 // Define user
 const user = new schema.Entity('users', {}, {
   idAttribute: 'uid'

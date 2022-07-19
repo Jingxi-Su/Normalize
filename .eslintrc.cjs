@@ -8,6 +8,9 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
+  plugins: [
+    'jest'
+  ],
   rules: {
     'no-prototype-builtins': 'off'
   }
