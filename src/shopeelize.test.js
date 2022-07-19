@@ -1,4 +1,5 @@
-import { schema, normalize } from './normalize.js'
+import { schema, normalize } from "./schema/normalize.js";
+import { denormalize } from "./schema/denormalize.js";
 
 const originalData = {
   id: '123',
@@ -59,3 +60,22 @@ test('The output of normalize is equal to normalizedData', () => {
   const data = normalize(originalData, article)
   expect(data).toEqual(normalizedData)
 })
+
+test('The output of denormalize is equal to originalData', () => {
+  const user = new schema.Entity('users', {}, {
+    idAttribute: 'uid'
+  })
+  const comment = new schema.Entity('comments', {
+    commenter: user
+  })
+  const article = new schema.Entity('articles', {
+    author: user,
+    comments: {
+      result: [comment]
+    }
+  })
+  const { result, entities } = normalizedData
+  const denormalizedData = denormalize(result, article, entities)
+  expect(denormalizedData).toEqual(originalData)
+})
+
