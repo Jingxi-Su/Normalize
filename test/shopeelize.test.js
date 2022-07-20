@@ -1,5 +1,5 @@
-import { schema, normalize } from "./schema/normalize.js";
-import { denormalize } from "./schema/denormalize.js";
+import { schema, normalize } from "../src/schema/normalize.js";
+import { denormalize } from "../src/schema/denormalize.js";
 
 const originalData = {
   id: '123',
