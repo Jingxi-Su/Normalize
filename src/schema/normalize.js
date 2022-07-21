@@ -3,7 +3,7 @@ import EntitySchema from './entity.js'
 // 从最外层实体开始，不断向内递归当前schema
 // 分两种情况：schema是EntitySchema实例 or 普通对象/数组(如result中的数据)
 const flatten = (data, schema, addEntity) => {
-  if (!schema) {
+  if (!schema || schema.length <= 0) {
     throw new Error("normalize: schema invalid!");
   }
   //判断是否存在getName方法从而推断是否是schema
@@ -31,17 +31,6 @@ const schemaNormalize = (data, schema, flatten, addEntity) => {
 const noSchemaNormalize = (data, schema, flatten, addEntity) => {
   const object = JSON.parse(JSON.stringify(data))
   const arr = []
-  // Object.keys(schema).forEach(key => {
-  //   // 拿到嵌套的schema，进入flatten递归
-  //   const innerSchema = schema[key]
-  //   const innerData = data[key]
-  //   const value = flatten(innerData, innerSchema, addEntity)
-  //   if (flag) { // 数组
-  //     arr.push(value)
-  //   } else { // 对象
-  //     object[key] = value
-  //   }
-  // })
   // 拿到嵌套的schema，进入flatten递归
   if (Array.isArray(schema)) {
     //当length>1时，因为schema只有一个key，所以Object.keys(schema).forEach会导致后面的内容无法识别，所以需要依据object.length
@@ -61,7 +50,6 @@ const noSchemaNormalize = (data, schema, flatten, addEntity) => {
 
     return object
   }
-  // return flag ? arr : object
 }
 
 /**

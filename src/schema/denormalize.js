@@ -5,6 +5,9 @@ const getUnflatten = (entities) => {
   const cache = {}
   const getEntity = getEntities(entities)
   return function unflatten (data, schema) {
+    if (!schema || schema.length <= 0) {
+      throw new Error("normalize: schema invalid!");
+    }
     if (!schema.getName) {
       return unflattenNoEntity(data, schema, unflatten)
     }
