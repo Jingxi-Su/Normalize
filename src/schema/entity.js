@@ -1,3 +1,9 @@
+/**
+ * 
+ * @param {*} name 该schema的名称
+ * @param {*} entityParams 可选参数，定义该schema的外键，定义的外键可以不存在
+ * @param {*} entityConfig 可选参数，目前仅支持一个参数idAttribute，定义该entity的主键，默认值为字符串'id'
+ */
 export default class EntitySchema {// 创建一个类
   constructor (name, entityParams = {}, entityConfig = {}) {
     this.name = name

@@ -93,6 +93,13 @@ const getEntities = (entities) => {
 const schema = {
   Entity: EntitySchema
 }
+/**
+ * 
+ * @param {*} result 需要反范式化的数据，id的数组
+ * @param {*} schema 外部实体
+ * @param {*} entities 实体数据
+ * @returns 
+ */
 
 const denormalize = (result, schema, entities) => {
   if (!result) {
