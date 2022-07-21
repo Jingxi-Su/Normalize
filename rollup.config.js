@@ -1,3 +1,5 @@
+const { terser } = require('rollup-plugin-terser');
+
 const path = require('path');
 
 const resolveFile = function (filePath) {
@@ -13,5 +15,8 @@ module.exports = [
       format: 'umd',
       name: 'shopeelize',
     },
+    plugins: [
+      terser()
+    ]
   },
 ]
