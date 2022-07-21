@@ -10,16 +10,23 @@ const originalData = {
   title: 'My awesome blog post',
   comments: {
     total: 100,
-    result: [{
-      id: '324',
-      commenter: {
-        uid: '2',
-        name: 'Nicole'
-      }
-    }]
+    result: [
+      {
+        id: '324',
+        commenter: {
+          uid: '2',
+          name: 'Nicole'
+        }
+      },
+      {
+        id: '325',
+        commenter: {
+          uid: '3',
+          name: 'Cici'
+        }
+      }]
   }
 }
-
 const normalizedData = {
   result: '123',
   entities: {
@@ -30,16 +37,18 @@ const normalizedData = {
         title: 'My awesome blog post',
         comments: {
           total: 100,
-          result: ['324']
+          result: ['324', '325']
         }
       }
     },
     users: {
       1: { uid: '1', name: 'Paul' },
-      2: { uid: '2', name: 'Nicole' }
+      2: { uid: '2', name: 'Nicole' },
+      3: { uid: '3', name: 'Cici' }
     },
     comments: {
-      324: { id: '324', commenter: '2' }
+      324: { id: '324', commenter: '2' },
+      325: { id: '325', commenter: '3' }
     }
   }
 }

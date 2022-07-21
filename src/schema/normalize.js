@@ -30,6 +30,7 @@ const schemaNormalize = (data, schema, flatten, addEntity) => {
 // 针对schema是一个非EntitySchema实体的情况，可能是对象或者数组
 const noSchemaNormalize = (data, schema, flatten, addEntity) => {
   const object = JSON.parse(JSON.stringify(data))
+  const arr = []
   // Object.keys(schema).forEach(key => {
   //   // 拿到嵌套的schema，进入flatten递归
   //   const innerSchema = schema[key]
@@ -43,7 +44,6 @@ const noSchemaNormalize = (data, schema, flatten, addEntity) => {
   // })
   // 拿到嵌套的schema，进入flatten递归
   if (Array.isArray(schema)) {
-    const arr = []
     //当length>1时，因为schema只有一个key，所以Object.keys(schema).forEach会导致后面的内容无法识别，所以需要依据object.length
     for (let i = 0; i < object.length; i++) {
       const innerSchema = schema[i] || schema[schema.length - 1]

@@ -49,17 +49,27 @@ const unflattenNoEntity = (data, schema, unflatten) => {
   const arr = []
   const flag = Array.isArray(schema)
   // 判别数组和非数组，不同处理方法
-  Object.keys(schema).forEach((key) => {
-    let innerData = object[key]
-    const innerSchema = schema[key]
-    if (innerData) {
-      innerData = object[key] = unflatten(innerData, innerSchema)
+  if (Array.isArray(schema)) {
+    //防止多内容出现
+    for (let i = 0; i < object.length; i++) {
+      let innerData = object[i]
+      const innerSchema = schema[i] || schema[schema.length - 1]
+      if (innerData) {
+        innerData = object[i] = unflatten(innerData, innerSchema)
+      }
+      arr.push(innerData)
     }
-    if (flag) {
-      arr.push(unflatten(innerData, innerSchema))
-    }
-  })
-  return flag ? arr : object
+    return arr
+  } else {
+    Object.keys(schema).forEach((key) => {
+      let innerData = object[key]
+      const innerSchema = schema[key]
+      if (innerData) {
+        innerData = object[key] = unflatten(innerData, innerSchema)
+      }
+    })
+    return object
+  }
 }
 
 /**
