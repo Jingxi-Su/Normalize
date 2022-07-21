@@ -5,65 +5,88 @@ const getUnflatten = (entities) => {
   const cache = {}
   const getEntity = getEntities(entities)
   return function unflatten (data, schema) {
-    if (typeof schema.getName === 'undefined') {
-      return unflattenNoEntity(schema, data, unflatten)
+    if (!schema.getName) {
+      return unflattenNoEntity(data, schema, unflatten)
     }
     return unflattenEntity(data, schema, unflatten, getEntity, cache)
   }
 }
 
+/**
+ * 
+ * @param {*} data id with/without data 
+ * @param {*} schema schema corresponding to the data
+ * @param {*} cache 
+ * @returns 
+ */
+
 // 针对schema是一个EntitySchema实体的情况
-const unflattenEntity = (id, schema, unflatten, getEntity, cache) => {
-  const entity = getEntity(id, schema)// 取到的对应schema的某个id所对应的对象
+const unflattenEntity = (data, schema, unflatten, getEntity, cache) => {
+  const entity = getEntity(data, schema)// 取到对应schema的某个id所对应的对象
   if (!cache[schema.getName()]) {
     cache[schema.getName()] = {}
   }
-  if (!cache[schema.getName()][id]) {
-    const entityCopy = { ...entity }
+  if (!cache[schema.getName()][data]) {
+    const entityCopy = JSON.parse(JSON.stringify(entity))
     // 在有嵌套的情况下递归,由外向内
     Object.keys(schema.schema).forEach((key) => {
       if (entityCopy.hasOwnProperty(key)) {
-        const innerschema = schema.schema[key]
+        const innerSchema = schema.schema[key]
+        const innerData = entityCopy[key]
         // 范式化数据替换回原本数据
-        entityCopy[key] = unflatten(entityCopy[key], innerschema)
+        entityCopy[key] = unflatten(innerData, innerSchema)
       }
     })
     // 依次存入
-    cache[schema.getName()][id] = entityCopy
+    cache[schema.getName()][data] = entityCopy
   }
-  return cache[schema.getName()][id]
+  return cache[schema.getName()][data]
 }
 
 // 针对schema是一个非EntitySchema实体的情况
-const unflattenNoEntity = (schema, input, unflatten) => {
-  const object = { ...input }
+const unflattenNoEntity = (data, schema, unflatten) => {
+  const object = JSON.parse(JSON.stringify(data))
   const arr = []
-  const flag = schema instanceof Array
+  const flag = Array.isArray(schema)
   // 判别数组和非数组，不同处理方法
-  Object.keys(schema).forEach((key) => {
-    if (flag) {
-      if (object[key]) {
-        object[key] = unflatten(object[key], schema[key])
+  if (Array.isArray(schema)) {
+    //防止多内容出现
+    for (let i = 0; i < object.length; i++) {
+      let innerData = object[i]
+      const innerSchema = schema[i] || schema[schema.length - 1]
+      if (innerData) {
+        innerData = object[i] = unflatten(innerData, innerSchema)
       }
-      arr.push(unflatten(object[key], schema[key]))
-    } else {
-      if (object[key]) {
-        object[key] = unflatten(object[key], schema[key])
-      }
+      arr.push(innerData)
     }
-  })
-  return flag ? arr : object
+    return arr
+  } else {
+    Object.keys(schema).forEach((key) => {
+      let innerData = object[key]
+      const innerSchema = schema[key]
+      if (innerData) {
+        innerData = object[key] = unflatten(innerData, innerSchema)
+      }
+    })
+    return object
+  }
 }
+
+/**
+ * 
+ * @param {*} data  EntityOrId
+ * @returns 
+ */
 
 // 传入entities,获取对应schema的某个id所对应的对象
 const getEntities = (entities) => {
-  return (entityOrId, schema) => {
+  return (data, schema) => {
     const schemaKey = schema.getName()
-    if (typeof entityOrId === 'object') {
-      return entityOrId
+    if (typeof data === 'object') {
+      return data
     }
     // 如果是id就返回entities中对应的范式化数据
-    return entities[schemaKey][entityOrId]
+    return entities[schemaKey][data]
   }
 }
 
@@ -71,6 +94,17 @@ const schema = {
   Entity: EntitySchema
 }
 
-const denormalize = (result, schema, entities) => getUnflatten(entities)(result, schema)
+const denormalize = (result, schema, entities) => {
+  if (!result) {
+    throw new Error("denormalize: result invalid!");
+  }
+  if (!schema) {
+    throw new Error("denormalize: schema invalid!");
+  }
+  if (!entities) {
+    throw new Error("denormalize: entities invalid!");
+  }
+  return getUnflatten(entities)(result, schema)
+}
 
 export { schema, denormalize }

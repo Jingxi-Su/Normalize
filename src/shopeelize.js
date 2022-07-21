@@ -2,23 +2,31 @@ import { schema, normalize } from "./schema/normalize.js";
 import { denormalize } from "./schema/denormalize.js";
 
 const originalData = {
-  "id": "123",
-  "author": {
-    "uid": "1",
-    "name": "Paul"
+  id: '123',
+  author: {
+    uid: '1',
+    name: 'Paul'
   },
-  "title": "My awesome blog post",
-  "comments": {
+  title: 'My awesome blog post',
+  comments: {
     total: 100,
-    result: [{
-      "id": "324",
-      "commenter": {
-        "uid": "2",
-        "name": "Nicole"
-      }
-    }]
+    result: [
+      {
+        id: '324',
+        commenter: {
+          uid: '2',
+          name: 'Nicole'
+        }
+      },
+      {
+        id: '325',
+        commenter: {
+          uid: '3',
+          name: 'Cici'
+        }
+      }]
   }
-};
+}
 // Define user
 const user = new schema.Entity('users', {}, {
   idAttribute: 'uid'
